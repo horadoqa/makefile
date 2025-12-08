@@ -1,22 +1,37 @@
 .PHONY: menu buscar_ids deletar_ids criar_usuario
 
 # ================================
+# CORES
+# ================================
+YELLOW  = \033[1;33m
+BLUE    = \033[1;34m
+CYAN    = \033[1;36m
+GREEN   = \033[1;32m
+RED     = \033[1;31m
+NC      = \033[0m     # Reset
+
+# ================================
 # MENU
 # ================================
 menu:
-	@echo "==================================="; \
-	echo "        MENU DE OPERAÇÕES"; \
-	echo "==================================="; \
-	echo "1 - Criar usuário"; \
-	echo "2 - Buscar IDs"; \
-	echo "3 - Deletar usuários"; \
-	echo "==================================="; \
+	@clear; \
+	echo ""; \
+	echo "${CYAN}╔═══════════════════════════════════════╗${NC}"; \
+	echo "${CYAN}║${NC}     MENU DE OPERAÇÕES            ${CYAN}║${NC}"; \
+	echo "${CYAN}╠═══════════════════════════════════════╣${NC}"; \
+	echo "${CYAN}║${NC}  ${YELLOW}1${NC} - ${BLUE}Criar usuário          ${CYAN}║${NC}"; \
+	echo "${CYAN}║${NC}  ${YELLOW}2${NC} - ${BLUE}Buscar IDs             ${CYAN}║${NC}"; \
+	echo "${CYAN}║${NC}  ${YELLOW}3${NC} - ${BLUE}Deletar usuários       ${CYAN}║${NC}"; \
+	echo "${CYAN}║${NC}  ${YELLOW}4${NC} - ${BLUE}Sair                   ${CYAN}║${NC}"; \
+	echo "${CYAN}╚═══════════════════════════════════════╝${NC}"; \
+	echo ""; \
 	read -p 'Escolha uma opção: ' opt; \
 	case $$opt in \
 		1) $(MAKE) --no-print-directory criar_usuario ;; \
 		2) $(MAKE) --no-print-directory buscar_ids ;; \
 		3) $(MAKE) --no-print-directory deletar_ids ;; \
-		*) echo 'Opção inválida!'; exit 1 ;; \
+		4) $(MAKE) --no-print-directory sair ;; \
+		*) echo "${RED}Opção inválida!${NC}"; exit 1 ;; \
 	esac
 
 
@@ -67,8 +82,18 @@ deletar_ids:
 	  fi; \
 	done < ids.txt
 
+# ================================
+# 4 - SAIR
+# ================================
+sair:
+	@echo ""; \
+	printf "${GREEN}Saindo"; \
+	for i in 1 2 3; do \
+		sleep 0.4; \
+		printf "."; \
+	done; \
+	printf "${NC}\n"; \
+	sleep 0.3; \
+	clear
 
-# make criar_usuario
-# make buscar_ids
-# make deletar_ids
 # make menu
