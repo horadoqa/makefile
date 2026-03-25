@@ -43,7 +43,7 @@ criar_usuario:
 	@RESPONSE=$$(curl -s -X POST "https://serverest.dev/usuarios" \
 		-H "accept: application/json" \
 		-H "Content-Type: application/json" \
-		-d '{ "nome": "Hora do QA", "email": "horadoqa6@qa.com.br", "password": "teste", "administrador": "true" }'); \
+		-d '{ "nome": "Hora do QA", "email": "horadoqa7@qa.com.br", "password": "teste", "administrador": "true" }'); \
 	MESSAGE=$$(echo "$$RESPONSE" | jq -r '.message'); \
 	if [ "$$MESSAGE" = "Cadastro realizado com sucesso" ]; then \
 		echo "$$RESPONSE"; \
@@ -58,17 +58,19 @@ criar_usuario:
 # ================================
 # 2) Buscar IDs de usuários
 # ================================
-buscar_ids:
+buscar_ids: consultar_ids
 	@echo "Buscando IDs de usuários com nome 'Hora do QA'..."
-	@curl -s "https://serverest.dev/usuarios" \
-	| jq -r '.usuarios[] | select(.nome == "Hora do QA") | ._id' \
-	> ids.txt
+	@curl -s "https://serverest.dev/usuarios" | jq -r '.usuarios[] | select(.nome == "Hora do QA") | ._id' > ids.txt
 	@echo "IDs encontrados foram salvos em ids.txt"
+
+consultar_ids:
+	@count=$$(curl -s "https://serverest.dev/usuarios" | jq '.usuarios | map(select(.nome == "Hora do QA")) | length'); \
+	echo "Foram encontrados $$count registros com o nome 'Hora do QA'"
 
 # ================================
 # 3) Deletar usuários via ids.txt
 # ================================
-deletar_ids:
+deletar_ids: buscar_ids
 	@BASE_URL="https://serverest.dev/usuarios"; \
 	if [ ! -f ids.txt ]; then \
 	  echo "Arquivo ids.txt não encontrado!"; \
@@ -81,6 +83,7 @@ deletar_ids:
 	    echo -e "\n---------------------------------------"; \
 	  fi; \
 	done < ids.txt
+	@> ids.txt
 
 # ================================
 # 4 - SAIR
